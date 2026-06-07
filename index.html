@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Alphabet arabe - Kasra - Full local</title>
+<title>Alphabet arabe - Kasra</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;background:#eef8fc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#0d3240}
@@ -32,122 +32,124 @@ button.ui{border:2px solid #cbeaf5;background:white;border-radius:12px;padding:1
       <button class="ui" id="bonus" type="button">Son en plus</button>
     </div>
   </div>
-
   <div class="wrap">
     <img src="./alphabet_kasra.jpeg" alt="Alphabet arabe avec kasra">
     <div class="grid" id="grid"></div>
   </div>
-
   <div class="note">
-    <b>Version full local :</b> tous les fichiers sont dans le même dossier que <code>index.html</code>.
-    Dézippe le dossier, puis ouvre <code>index.html</code>. Ne déplace pas le fichier HTML seul.
+    Version corrigée : on peut rejouer la même lettre plusieurs fois d'affilée.
     <div class="debug" id="debug"></div>
   </div>
 </div>
-
 <script>
 const cells = [{"letter": "جِ", "name": "jim", "audio": "05.mp3"}, {"letter": "ثِ", "name": "tha", "audio": "04.mp3"}, {"letter": "تِ", "name": "ta", "audio": "03.mp3"}, {"letter": "بِ", "name": "ba", "audio": "02.mp3"}, {"letter": "إِ", "name": "alif", "audio": "01.mp3"}, {"letter": "رِ", "name": "ra", "audio": "10.mp3"}, {"letter": "ذِ", "name": "dhal", "audio": "09.mp3"}, {"letter": "دِ", "name": "dal", "audio": "08.mp3"}, {"letter": "خِ", "name": "kha", "audio": "07.mp3"}, {"letter": "حِ", "name": "ha", "audio": "06.mp3"}, {"letter": "ضِ", "name": "dad", "audio": "15.mp3"}, {"letter": "صِ", "name": "sad", "audio": "14.mp3"}, {"letter": "شِ", "name": "shin", "audio": "13.mp3"}, {"letter": "سِ", "name": "sin", "audio": "12.mp3"}, {"letter": "زِ", "name": "zay", "audio": "11.mp3"}, {"letter": "فِ", "name": "fa", "audio": "20.mp3"}, {"letter": "غِ", "name": "ghayn", "audio": "19.mp3"}, {"letter": "عِ", "name": "ayn", "audio": "18.mp3"}, {"letter": "ظِ", "name": "dha", "audio": "17.mp3"}, {"letter": "طِ", "name": "ta emphatique", "audio": "16.mp3"}, {"letter": "نِ", "name": "noun", "audio": "25.mp3"}, {"letter": "مِ", "name": "mim", "audio": "24.mp3"}, {"letter": "لِ", "name": "lam", "audio": "23.mp3"}, {"letter": "كِ", "name": "kaf", "audio": "22.mp3"}, {"letter": "قِ", "name": "qaf", "audio": "21.mp3"}, {"letter": "ىِ", "name": "alif maksoura", "audio": "30.mp3"}, {"letter": "يِ", "name": "ya", "audio": "29.mp3"}, {"letter": "ءِ", "name": "hamza", "audio": "28.mp3"}, {"letter": "وِ", "name": "waw", "audio": "27.mp3"}, {"letter": "هِ", "name": "ha", "audio": "26.mp3"}];
 const grid = document.getElementById('grid');
 const statusEl = document.getElementById('status');
 const debugEl = document.getElementById('debug');
-const unlockBtn = document.getElementById('unlock');
-const testBtn = document.getElementById('test');
-const repeatBtn = document.getElementById('repeat');
-const bonusBtn = document.getElementById('bonus');
-
-let last = null;
+let currentAudio = null;
 let currentButton = null;
-const audios = new Map();
+let last = null;
+let lastEventAt = 0;
+let lastEventKey = "";
+let playToken = 0;
 
-function log(msg) {
-  debugEl.textContent = msg;
-}
+function log(msg){ debugEl.textContent = msg; }
 
-function getAudio(file) {
-  if (!audios.has(file)) {
-    const a = new Audio();
-    a.preload = 'auto';
-    a.playsInline = true;
-    a.setAttribute('playsinline', '');
-    a.src = './' + file;
-    audios.set(file, a);
+function stopCurrent(){
+  if(currentAudio){
+    try{
+      currentAudio.pause();
+      currentAudio.src = "";
+      currentAudio.load();
+    }catch(e){}
+    currentAudio = null;
   }
-  return audios.get(file);
-}
-
-function stopAll() {
-  for (const a of audios.values()) {
-    try { a.pause(); a.currentTime = 0; } catch(e) {}
+  if(currentButton){
+    currentButton.classList.remove('active');
+    currentButton = null;
   }
-  if (currentButton) currentButton.classList.remove('active');
 }
 
-async function unlockSound() {
-  const first = getAudio('01.mp3');
-  try {
-    // Sur iOS, l'audio doit être appelé depuis un vrai clic utilisateur.
-    first.volume = 0.01;
-    await first.play();
-    first.pause();
-    first.currentTime = 0;
-    first.volume = 1;
+function newAudio(file){
+  const a = new Audio('./' + file);
+  a.preload = 'auto';
+  a.playsInline = true;
+  a.setAttribute('playsinline','');
+  return a;
+}
+
+async function unlockSound(){
+  try{
+    const a = newAudio('01.mp3');
+    a.volume = 0.01;
+    await a.play();
+    a.pause();
+    a.src = "";
+    a.load();
     statusEl.textContent = 'Son activé. Clique sur une lettre.';
-    log('Audio activé. URL actuelle : ' + location.href);
-  } catch(e) {
-    statusEl.textContent = 'Son toujours bloqué par le navigateur.';
-    log('Erreur activation : ' + (e && e.name ? e.name : e) + '\nURL : ' + location.href);
+    log('Audio activé.');
+  }catch(e){
+    statusEl.textContent = 'Son bloqué par le navigateur.';
+    log('Erreur activation : ' + (e && e.name ? e.name : e));
   }
 }
 
-async function play(file, label, btn) {
-  stopAll();
+async function play(file,label,btn){
+  const now = Date.now();
+  const key = file + label;
+  if(key === lastEventKey && now - lastEventAt < 160) return;
+  lastEventAt = now;
+  lastEventKey = key;
+
+  stopCurrent();
+
+  const token = ++playToken;
+  const a = newAudio(file);
+  currentAudio = a;
   currentButton = btn || null;
-  if (currentButton) currentButton.classList.add('active');
+  if(currentButton) currentButton.classList.add('active');
+  last = {file,label,btn};
 
-  const a = getAudio(file);
-  last = {file, label, btn};
+  a.onended = function(){
+    if(token === playToken){
+      if(currentButton) currentButton.classList.remove('active');
+      currentButton = null;
+      currentAudio = null;
+    }
+  };
 
-  try {
-    a.currentTime = 0;
+  try{
     statusEl.textContent = label;
-    a.onended = () => {
-      if (currentButton) currentButton.classList.remove('active');
-    };
     await a.play();
     log('Lecture OK : ' + file + ' — ' + label);
-  } catch(e) {
+  }catch(e){
     statusEl.textContent = 'Son bloqué : appuie sur “Activer le son”.';
-    log('Erreur lecture ' + file + ' : ' + (e && e.name ? e.name : e) + '\nURL : ' + location.href);
+    log('Erreur lecture ' + file + ' : ' + (e && e.name ? e.name : e));
   }
 }
 
-cells.forEach((item) => {
+cells.forEach(function(item){
   const b = document.createElement('button');
   b.className = 'cell';
   b.type = 'button';
-  b.title = item.letter + ' - ' + item.name + ' - ' + item.audio;
+  b.title = item.letter + ' - ' + item.name;
   b.setAttribute('aria-label', item.letter + ' ' + item.name);
-
-  // pointerup marche souvent mieux sur iPad que click/touchend seuls.
-  b.addEventListener('pointerup', (ev) => {
+  b.addEventListener('pointerup', function(ev){
     ev.preventDefault();
     play(item.audio, item.letter + ' — ' + item.name, b);
   });
-  b.addEventListener('click', (ev) => {
+  b.addEventListener('click', function(ev){
     ev.preventDefault();
     play(item.audio, item.letter + ' — ' + item.name, b);
   });
-
   grid.appendChild(b);
 });
 
-unlockBtn.addEventListener('pointerup', (ev) => { ev.preventDefault(); unlockSound(); });
-unlockBtn.addEventListener('click', (ev) => { ev.preventDefault(); unlockSound(); });
-testBtn.addEventListener('click', () => play('01.mp3', 'Test audio', null));
-repeatBtn.addEventListener('click', () => { if (last) play(last.file, last.label, last.btn); });
-bonusBtn.addEventListener('click', () => play('31.mp3', 'Son supplémentaire détecté', null));
-
-log('Fichiers attendus dans le même dossier : index.html, alphabet_kasra.jpeg, 01.mp3 à 31.mp3');
+document.getElementById('unlock').addEventListener('click', unlockSound);
+document.getElementById('test').addEventListener('click', function(){ play('01.mp3','Test audio',null); });
+document.getElementById('repeat').addEventListener('click', function(){ if(last) play(last.file,last.label,last.btn); });
+document.getElementById('bonus').addEventListener('click', function(){ play('31.mp3','Son supplémentaire détecté',null); });
+log('Version corrigée double appui.');
 </script>
 </body>
 </html>
