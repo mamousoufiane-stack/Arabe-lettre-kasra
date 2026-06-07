@@ -1,0 +1,14 @@
+MODE D'EMPLOI
+
+1. Dézippez complètement le dossier.
+2. Gardez tous les fichiers ensemble dans le même dossier :
+   - index.html
+   - alphabet_kasra.jpeg
+   - 01.mp3 à 31.mp3
+3. Ouvrez index.html.
+4. Appuyez sur "Activer le son", puis sur "Tester", puis sur les lettres.
+
+Important iPad :
+- Si vous envoyez uniquement index.html, ça ne marchera pas.
+- Il faut envoyer/dézipper tout le dossier.
+- Si iPad bloque encore l'audio en ouverture locale, il faudra servir le dossier via http:// ou https://.
