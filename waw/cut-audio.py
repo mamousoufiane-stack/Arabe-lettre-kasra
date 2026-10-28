@@ -13,7 +13,8 @@ clips=[
 ('w0',2,11.38,12.78,'أَوْرَاق'),('w1',2,13.02,14.50,'حَاسُوب'),
 ('w2',2,14.67,16.45,'السَّلَام'),('w3',2,16.69,18.06,'مَدْرَسَة')]
 for ident,source,start,end,label in clips:
+ # Seek before decoding so fade times start at zero for each clip.
  duration=end-start
- subprocess.run(['ffmpeg','-v','error','-y','-i',str(root/f'recitation-{source}.m4a'),'-ss',str(start),'-t',str(duration),'-af',f'loudnorm=I=-18:TP=-2:LRA=7,afade=t=in:d=0.008,afade=t=out:st={duration-.012}:d=0.012','-ar','44100','-ac','1','-c:a','libmp3lame','-b:a','80k',str(out/f'{ident}.mp3')],check=True)
+ subprocess.run(['ffmpeg','-v','error','-y','-ss',str(start),'-t',str(duration),'-i',str(root/f'recitation-{source}.m4a'),'-af',f'loudnorm=I=-18:TP=-2:LRA=7,afade=t=in:d=0.008,afade=t=out:st={duration-.012}:d=0.012','-ar','44100','-ac','1','-c:a','libmp3lame','-b:a','80k',str(out/f'{ident}.mp3')],check=True)
 (out/'segments.json').write_text(json.dumps([dict(id=i,source=f'recitation-{s}.m4a',start=a,end=b,label=l) for i,s,a,b,l in clips],ensure_ascii=False,indent=2))
 print('Created',len(clips),'clips;',sum(p.stat().st_size for p in out.glob('*.mp3')),'bytes')
