@@ -1,0 +1,114 @@
+[
+  {
+    "id": "s0",
+    "source": "recitation-2.m4a",
+    "start": 1.96,
+    "end": 2.66,
+    "label": "وَ"
+  },
+  {
+    "id": "s1",
+    "source": "recitation-2.m4a",
+    "start": 2.8,
+    "end": 3.48,
+    "label": "وُ"
+  },
+  {
+    "id": "s2",
+    "source": "recitation-2.m4a",
+    "start": 3.68,
+    "end": 4.48,
+    "label": "وِ"
+  },
+  {
+    "id": "s3",
+    "source": "recitation-2.m4a",
+    "start": 4.49,
+    "end": 5.62,
+    "label": "وَا"
+  },
+  {
+    "id": "s4",
+    "source": "recitation-2.m4a",
+    "start": 5.63,
+    "end": 6.79,
+    "label": "وُو"
+  },
+  {
+    "id": "s5",
+    "source": "recitation-2.m4a",
+    "start": 6.81,
+    "end": 7.86,
+    "label": "وِي"
+  },
+  {
+    "id": "s6",
+    "source": "recitation-2.m4a",
+    "start": 7.93,
+    "end": 8.73,
+    "label": "وًا"
+  },
+  {
+    "id": "s7",
+    "source": "recitation-2.m4a",
+    "start": 8.77,
+    "end": 9.65,
+    "label": "وٍ"
+  },
+  {
+    "id": "s8",
+    "source": "recitation-2.m4a",
+    "start": 9.98,
+    "end": 11.08,
+    "label": "وٌ"
+  },
+  {
+    "id": "s9",
+    "source": "recitation-1.m4a",
+    "start": 11.62,
+    "end": 12.88,
+    "label": "أَوْ"
+  },
+  {
+    "id": "s10",
+    "source": "recitation-1.m4a",
+    "start": 14.06,
+    "end": 15.64,
+    "label": "وَرَ"
+  },
+  {
+    "id": "s11",
+    "source": "recitation-1.m4a",
+    "start": 15.8,
+    "end": 17.21,
+    "label": "أَبْ"
+  },
+  {
+    "id": "w0",
+    "source": "recitation-2.m4a",
+    "start": 11.38,
+    "end": 12.78,
+    "label": "أَوْرَاق"
+  },
+  {
+    "id": "w1",
+    "source": "recitation-2.m4a",
+    "start": 13.02,
+    "end": 14.5,
+    "label": "حَاسُوب"
+  },
+  {
+    "id": "w2",
+    "source": "recitation-2.m4a",
+    "start": 14.67,
+    "end": 16.45,
+    "label": "السَّلَام"
+  },
+  {
+    "id": "w3",
+    "source": "recitation-2.m4a",
+    "start": 16.69,
+    "end": 18.06,
+    "label": "مَدْرَسَة"
+  }
+]
