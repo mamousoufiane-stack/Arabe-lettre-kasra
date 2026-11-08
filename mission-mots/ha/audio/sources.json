@@ -76,5 +76,29 @@
     "text": "تَأْكُلُ",
     "source": "Google Traduction",
     "language": "ar"
+  },
+  {
+    "id": "laara",
+    "text": "لَا أَرَى",
+    "source": "Google Traduction",
+    "language": "ar"
+  },
+  {
+    "id": "shafa",
+    "text": "شَفَة",
+    "source": "Google Traduction",
+    "language": "ar"
+  },
+  {
+    "id": "wajh",
+    "text": "وَجْه",
+    "source": "Google Traduction",
+    "language": "ar"
+  },
+  {
+    "id": "unuq",
+    "text": "عُنُق",
+    "source": "Google Traduction",
+    "language": "ar"
   }
 ]
